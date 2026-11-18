@@ -1,0 +1,51 @@
+{
+  "fonte": "https://www.data.rio/documents/5e15538d3a1b47e7a356463a324b21b7/about",
+  "sha256_bruto": "4df1da3485f3d4d3cd239ffba17672b788881f5e158033e9b48fec8eb04c3a50",
+  "total_confere": true,
+  "anos_total_divergente": [],
+  "dif_abs_confere": true,
+  "dif_pct_max_erro_pp": 0.0,
+  "taxa_max_erro": 0.0,
+  "periodo_coberto": [
+    "2003-01",
+    "2023-10"
+  ],
+  "n_meses": 250,
+  "meses_faltantes_na_serie": 0,
+  "duplicatas": 0,
+  "ocorrencias_negativas": 0,
+  "valores_ausentes_convertidos": [
+    {
+      "celula": "2003/dif_abs_oficial",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2003/dif_pct_oficial",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2023/Nov",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2023/Dez",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2023/dif_abs_oficial",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2023/dif_pct_oficial",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2023/populacao",
+      "valor_original": ".."
+    },
+    {
+      "celula": "2023/taxa_100k_oficial",
+      "valor_original": ".."
+    }
+  ]
+}

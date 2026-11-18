@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roubo de rua no Município do Rio de Janeiro (2003–2023): tendência, sazonalidade e ruptura pandêmica</title>
+<meta name="description" content="Artigo acadêmico com análise exploratória da série mensal de roubos de rua registrados no Município do Rio de Janeiro entre 2003 e 2023 (Tabela 2488, DATA.RIO / ISP-RJ).">
+<meta name="author" content="Raphael Cortes">
+<meta name="keywords" content="segurança pública; roubo de rua; séries temporais; sazonalidade; COVID-19; Rio de Janeiro; dados abertos; FAIR">
+<meta name="citation_title" content="Roubo de rua no Município do Rio de Janeiro (2003–2023): tendência, sazonalidade e ruptura pandêmica nos registros policiais">
+<meta name="citation_author" content="Cortes, Raphael">
+<meta name="citation_publication_date" content="2026/11/19">
+<meta name="citation_language" content="pt">
+<script src="https://cdn.plot.ly/plotly-4.1.1.min.js" charset="utf-8"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --surface: #fcfcfb; --surface-2: #f4f3ef; --border: #e6e5e0;
+    --ink: #0b0b0b; --ink-2: #3d3c39; --ink-3: #6b6a65;
+    --accent: #2a78d6; --accent-ink: #1c5cab; --code-bg: #f4f3ef;
+    --serif: "Source Serif 4", "Source Serif Pro", Georgia, Cambria, "Times New Roman", serif;
+    --sans: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--surface); color: var(--ink); font-family: var(--serif);
+         font-size: 1.075rem; line-height: 1.7; -webkit-text-size-adjust: 100%; }
+  a { color: var(--accent-ink); text-underline-offset: 2px; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 22px; }
+  header.top { border-bottom: 1px solid var(--border); padding: 44px 0 28px; }
+  .kicker { font-family: var(--sans); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase;
+            color: var(--ink-3); margin: 0 0 12px; }
+  h1 { font-size: clamp(1.6rem, 4.2vw, 2.25rem); line-height: 1.22; margin: 0 0 18px; font-weight: 700; }
+  .authors { font-family: var(--sans); font-size: .98rem; color: var(--ink-2); margin: 0; }
+  .authors strong { color: var(--ink); }
+  .affil { font-family: var(--sans); font-size: .88rem; color: var(--ink-3); margin: 4px 0 0; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 0; align-items: center; }
+  .badges img { height: 20px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: .9rem;
+         font-weight: 600; background: var(--ink); color: #fff; text-decoration: none; padding: 9px 16px;
+         border-radius: 6px; margin-top: 16px; }
+  .btn:hover { background: #2b2b2a; }
+  .btn svg { width: 18px; height: 18px; fill: currentColor; }
+  nav.toc { font-family: var(--sans); font-size: .88rem; background: var(--surface-2); border-radius: 8px;
+            padding: 14px 18px; margin: 28px 0 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; columns: 2; column-gap: 28px; }
+  nav.toc li { margin: 2px 0; }
+  section { padding: 8px 0; }
+  h2 { font-size: 1.45rem; margin: 40px 0 10px; line-height: 1.3; }
+  h3 { font-size: 1.12rem; margin: 26px 0 6px; }
+  .abstract { background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+              padding: 18px 22px; margin: 30px 0 0; }
+  .abstract h2 { margin-top: 0; font-size: 1.15rem; font-family: var(--sans); }
+  .abstract p { margin: 0 0 10px; text-align: justify; hyphens: auto; }
+  .kw { font-family: var(--sans); font-size: .9rem; }
+  p { text-align: justify; hyphens: auto; }
+  .rq { border: 1px solid var(--border); border-radius: 8px; padding: 6px 18px; margin: 14px 0; }
+  .rq p { margin: 8px 0; text-align: left; }
+  .rq b { font-family: var(--sans); color: var(--accent-ink); }
+  figure { margin: 26px 0 30px; }
+  .plot { width: 100%; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fcfcfb; }
+  figure img { width: 100%; height: auto; }
+  figcaption { font-family: var(--sans); font-size: .88rem; color: var(--ink-2); margin-top: 10px; line-height: 1.5; }
+  figcaption b { color: var(--ink); }
+  .fig-links { font-family: var(--sans); font-size: .78rem; margin: 6px 0 0; text-align: right; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  table { border-collapse: collapse; width: 100%; font-family: var(--sans); font-size: .86rem;
+          font-variant-numeric: tabular-nums; }
+  th, td { padding: 7px 12px; border-bottom: 1px solid var(--border); text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { background: var(--surface-2); font-weight: 600; color: var(--ink); position: sticky; top: 0; }
+  tbody tr:hover { background: #f7f6f2; }
+  .tnote { font-family: var(--sans); font-size: .8rem; color: var(--ink-3); margin-top: 8px; text-align: left; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+        overflow-x: auto; font-size: .8rem; line-height: 1.55; }
+  code { font-family: var(--mono); font-size: .88em; }
+  p code, li code, td code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  details { border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; margin: 12px 0; }
+  details summary { font-family: var(--sans); font-size: .92rem; font-weight: 600; cursor: pointer; }
+  .callout { font-family: var(--sans); font-size: .93rem; background: #eef4fc; border: 1px solid #cde2fb;
+             border-radius: 8px; padding: 12px 16px; margin: 18px 0; line-height: 1.55; }
+  .fair { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 16px 0; }
+  .fair div { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--sans);
+              font-size: .88rem; line-height: 1.5; }
+  .fair b { display: block; font-size: .95rem; margin-bottom: 4px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 6px; }
+  .stat { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--sans); }
+  .stat .v { font-size: 1.45rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: .78rem; color: var(--ink-3); line-height: 1.35; margin-top: 4px; }
+  .refs p { text-align: left; padding-left: 0; margin: 0 0 12px; font-size: .95rem; line-height: 1.55; }
+  footer { border-top: 1px solid var(--border); margin-top: 48px; padding: 24px 0 40px; font-family: var(--sans);
+           font-size: .82rem; color: var(--ink-3); }
+  @media (max-width: 640px) {
+    body { font-size: 1rem; }
+    nav.toc ol { columns: 1; }
+    .fair { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    p { text-align: left; }
+    th, td { padding: 6px 7px; }
+    table { font-size: .8rem; }
+  }
+  @media print { nav.toc, .btn, .fig-links { display: none; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <p class="kicker">Artigo · Projeto Final de Disciplina · 2026</p>
+    <h1>Roubo de rua no Município do Rio de Janeiro (2003–2023): tendência, sazonalidade e ruptura pandêmica nos registros policiais</h1>
+    <p class="authors"><strong>Raphael Cortes</strong> — Discente, Bacharelado em Sistemas de Informação (6º período)</p>
+    <p class="affil">Centro Universitário La Salle do Rio de Janeiro (UNILASALLE-RJ)</p>
+    <p class="affil">Disciplina: Linguagem de Programação (Análise e Visualização de Dados com Python) · Semestre 2026.2</p>
+    <p class="affil">Professor orientador: <strong>Prof. Alexandre Neves Louzada</strong></p>
+    <div class="badges" aria-label="Metadados do projeto">
+      <img src="https://img.shields.io/badge/Python-3.12%2B-2a78d6" alt="Python 3.12 ou superior">
+      <img src="https://img.shields.io/badge/c%C3%B3digo-MIT-0b0b0b" alt="Licença do código: MIT">
+      <img src="https://img.shields.io/badge/dados%20%26%20texto-CC%20BY%204.0-1c5cab" alt="Licença de dados e texto: CC BY 4.0">
+      <img src="https://img.shields.io/badge/FAIR-compliant-1baf7a" alt="Aderente aos princípios FAIR">
+      <img src="https://img.shields.io/badge/dados-DATA.RIO%20%2F%20ISP--RJ-52514e" alt="Fonte dos dados: DATA.RIO / ISP-RJ">
+    </div>
+    <a class="btn" href="https://github.com/RAPHAELCCORTES/roubo-de-rua-rio" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      Repositório no GitHub
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="abstract" aria-labelledby="resumo">
+    <h2 id="resumo">Resumo</h2>
+    <p>O roubo de rua — categoria que reúne roubo a transeunte, roubo de celular e roubo em coletivo — é um dos crimes que mais afetam a sensação de segurança no espaço urbano. Este estudo analisa a série mensal de registros dessa categoria no Município do Rio de Janeiro entre janeiro de 2003 e outubro de 2023 (250 meses e 937.682 ocorrências), publicada pelo portal DATA.RIO a partir de dados do Instituto de Segurança Pública (ISP-RJ). Construiu-se um <i>pipeline</i> reprodutível em Python que converte a planilha original em formato longo, valida totais e taxas, ajusta as contagens pelo número de dias de cada mês e decompõe a série por STL robusta. Os resultados indicam (i) dois ciclos completos de alta e queda, com a taxa anual passando de 394,2 (2003) para o pico de 1.030,3 ocorrências por 100 mil habitantes (2017) e recuando para 561,4 em 2022; (ii) sazonalidade estatisticamente significativa (Kruskal-Wallis, p &lt; 0,001), com fevereiro 8,3% acima da tendência e dezembro 5,9% abaixo, padrão oculto quando não se corrige a duração dos meses; e (iii) uma queda abrupta de 65% em abril–maio de 2020 em relação a 2019, que se sobrepôs a um declínio já em curso e não foi revertida: em 2023 a média diária permaneceu 53% abaixo do patamar de 2018–2019. Discute-se o papel da subnotificação, das mudanças de rotina e das limitações dos registros administrativos.</p>
+    <p class="kw"><b>Palavras-chave:</b> segurança pública; roubo de rua; séries temporais; sazonalidade; COVID-19; dados abertos.</p>
+  </section>
+
+  <nav class="toc" aria-label="Sumário">
+    <b>Sumário</b>
+    <ol>
+      <li><a href="#introducao">Introdução</a></li>
+      <li><a href="#metodologia">Metodologia e pipeline de dados</a></li>
+      <li><a href="#resultados">Resultados e discussão</a></li>
+      <li><a href="#conclusao">Conclusão</a></li>
+      <li><a href="#fair">Disponibilidade dos dados e declaração FAIR</a></li>
+      <li><a href="#referencias">Referências</a></li>
+    </ol>
+  </nav>
+
+  <!-- ===================================================== 1. INTRODUÇÃO -->
+  <section id="introducao">
+    <h2>1. Introdução</h2>
+    <p>Os crimes patrimoniais praticados contra pedestres e passageiros de ônibus são parte central do debate sobre segurança pública no Rio de Janeiro. Diferentemente de homicídios, que mobilizam a atenção da imprensa por sua gravidade, o roubo de rua é um crime de alta frequência: afeta diretamente a mobilidade, o uso dos espaços públicos e a confiança da população nas instituições. Entender como esse indicador se comporta ao longo do tempo é útil tanto para o planejamento do policiamento quanto para a avaliação de políticas públicas e a comunicação com a sociedade.</p>
+    <p>O Instituto de Segurança Pública do Estado do Rio de Janeiro (ISP-RJ) consolida mensalmente os registros de ocorrência da Polícia Civil, e a Prefeitura do Rio, por meio do Instituto Pereira Passos (IPP), disponibiliza no portal DATA.RIO uma tabela municipal com a série de roubos de rua desde 2003. São mais de duas décadas de dados abertos, que atravessam ciclos econômicos, grandes eventos, crises fiscais do Estado e a pandemia de COVID-19. Essa extensão permite separar o que é tendência de longo prazo, o que é variação recorrente ao longo do ano e o que é ruptura pontual.</p>
+    <p>A análise de séries criminais tem uma armadilha conhecida: registros administrativos medem a atividade de notificação, não a criminalidade em si. Uma queda nos números pode refletir menos crimes, mas também delegacias fechadas, mudanças de rotina ou desestímulo ao registro. Por isso, este trabalho combina estatística descritiva com a identificação explícita de períodos atípicos e discute cada resultado à luz dessas limitações. O estudo é guiado por três perguntas de pesquisa:</p>
+    <div class="rq">
+      <p><b>RQ1 — Tendência.</b> Como a taxa anual de roubo de rua por 100 mil habitantes evoluiu entre 2003 e 2023, e quais fases de alta e de queda podem ser identificadas?</p>
+      <p><b>RQ2 — Sazonalidade.</b> Existe um padrão mensal recorrente nos registros depois de descontadas a tendência e a diferença no número de dias de cada mês?</p>
+      <p><b>RQ3 — Ruptura.</b> Qual foi a magnitude do efeito da pandemia de COVID-19 sobre os registros, e o patamar retornou ao nível pré-pandêmico?</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== 2. METODOLOGIA -->
+  <section id="metodologia">
+    <h2>2. Metodologia e pipeline de dados</h2>
+
+    <h3>2.1 Fonte primária e granularidade</h3>
+    <p>A fonte é a <i>Tabela 2488 — Incidências de roubo de rua, por mês, total, diferenças com relação ao ano anterior, população e taxa por cem mil habitantes</i>, publicada no portal DATA.RIO (IPP, 2023) com base nos registros do ISP-RJ (acesso pelo IPP em 27/11/2023). O arquivo é uma planilha Excel 97–2003 (<code>.xls</code>) com uma linha por ano (2003 a 2023) e uma coluna por mês, além das colunas de total anual, diferença absoluta e percentual em relação ao ano anterior, população projetada e taxa por 100 mil habitantes. A granularidade é <b>municipal e mensal</b>: não há desagregação por bairro, horário ou perfil da vítima. Segundo a nota 1 da tabela, a categoria engloba roubo a transeunte, roubo de celular e roubo em coletivo. Uma segunda aba (“Definições”) adverte que a classificação policial é provisória e pode ser alterada durante o inquérito.</p>
+
+    <h3>2.2 Tratamento dos dados</h3>
+    <p>O <i>pipeline</i> está no módulo <code>src/etl.py</code> e segue as etapas de extração, transformação, validação e carga. O arquivo bruto nunca é alterado: sua integridade é verificada por <i>hash</i> SHA-256 a cada execução.</p>
+    <ul>
+      <li><b>Codificação e parsing.</b> A planilha usa o formato binário BIFF, lido com o motor <code>xlrd</code>. Como o cabeçalho ocupa várias linhas e traz números de nota colados aos rótulos (“Total2”, “População3”), a tabela é localizada dinamicamente pela linha que contém “Jan” e “Dez”, e as demais colunas são identificadas por prefixo, sem posições fixas.</li>
+      <li><b>Valores ausentes.</b> A tabela usa marcadores textuais (“..” = não se aplica; “...” = dado não disponível). Foram encontradas 8 células com esses marcadores: as diferenças de 2003 (não há ano anterior), os meses de novembro e dezembro de 2023 (ainda não publicados) e a população, a taxa e as diferenças de 2023. Todas foram convertidas para <code>NaN</code> e registradas uma a uma no relatório <code>validation_report.json</code>. Os dois meses futuros foram <b>descartados</b> da série longa, sem imputação. A população de 2023 foi <b>imputada</b> pelo último valor disponível (2022), com a coluna <code>populacao_imputada</code> sinalizando as linhas afetadas.</li>
+      <li><b>Conversão de tipos.</b> Contagens foram convertidas em inteiros anuláveis (<code>Int64</code>); a data de referência (primeiro dia do mês) em <code>datetime</code>; e o período em texto no padrão ISO (<code>AAAA-MM</code>).</li>
+      <li><b>Métricas derivadas.</b> (a) <code>media_diaria</code> = ocorrências ÷ dias do mês, essencial para comparar fevereiro com meses de 31 dias; (b) <code>taxa_anualizada_100k</code>, comparável à taxa anual oficial; (c) totais de janeiro a outubro, para comparar 2023 com os anos anteriores em base idêntica; (d) indicadores de período atípico — <code>flag_greve_pc_2017</code> (jan.–abr./2017) e <code>flag_pandemia</code> (mar./2020–dez./2021).</li>
+      <li><b>Validação.</b> Os totais anuais, as diferenças absolutas e percentuais e as taxas publicadas foram recalculados a partir dos meses. Todos conferiram exatamente (erro máximo de 0,0 na taxa), e a série não tem meses faltantes, duplicatas ou valores negativos.</li>
+      <li><b>Persistência.</b> Os dados tratados são salvos em Parquet e CSV comprimido (<code>.csv.gz</code>): <code>roubo_rua_mensal</code> (250 linhas) e <code>roubo_rua_anual</code> (21 linhas).</li>
+    </ul>
+    <details>
+      <summary>Trecho 1 — Localização dinâmica do cabeçalho (<code>src/etl.py</code>)</summary>
+      {{CODE:locate_table}}
+    </details>
+    <details>
+      <summary>Trecho 2 — Conversão de marcadores de ausência com rastreabilidade</summary>
+      {{CODE:to_number}}
+    </details>
+    <details open>
+      <summary>Trecho 3 — Formato longo e métricas derivadas</summary>
+      {{CODE:to_long}}
+    </details>
+    <details>
+      <summary>Trecho 4 — Validação da consistência interna</summary>
+      {{CODE:validate}}
+    </details>
+
+    <h3>2.3 Métodos de análise</h3>
+    <p><b>Tendência (RQ1).</b> Usa-se a taxa anual oficial por 100 mil habitantes para os anos completos. Para 2023, estima-se uma taxa anualizada a partir da média diária de janeiro a outubro, sempre identificada como estimativa. A dispersão intra-anual é medida pelo coeficiente de variação (CV) da média diária mensal.</p>
+    <p><b>Decomposição e outliers.</b> A série de médias diárias foi decomposta pelo método STL (<i>Seasonal-Trend decomposition using Loess</i>) em sua versão robusta (CLEVELAND <i>et al.</i>, 1990), aplicado ao logaritmo da série para modelar a sazonalidade de forma multiplicativa. Os resíduos foram padronizados por um <i>z-score</i> robusto (mediana e desvio absoluto mediano, MAD), e meses com |z| &gt; 3,5 foram classificados como atípicos, como recomendam Leys <i>et al.</i> (2013) e Iglewicz e Hoaglin (1993).</p>
+    <p><b>Sazonalidade (RQ2).</b> Calcula-se o índice sazonal clássico: média diária do mês ÷ média móvel centrada 2×12. Um índice de 1,05 significa 5% acima da tendência local. Os meses dos períodos atípicos foram excluídos, restando 212 observações. A igualdade das distribuições mensais foi testada por Kruskal-Wallis (KRUSKAL; WALLIS, 1952), com tamanho de efeito ε² (TOMCZAK; TOMCZAK, 2014).</p>
+    <p><b>Ruptura (RQ3).</b> Cada mês de 2020 a 2023 é comparado com o mesmo mês de 2019 (variação da média diária). Isso controla a sazonalidade sem depender de um modelo. O patamar pós-pandêmico (2022–2023) é comparado com o pré-pandêmico (2018–2019) pelo teste de Mann-Whitney unilateral.</p>
+  </section>
+
+  <!-- ===================================================== 3. RESULTADOS -->
+  <section id="resultados">
+    <h2>3. Resultados e discussão</h2>
+
+    <div class="stats" role="list">
+      <div class="stat" role="listitem"><div class="v">937.682</div><div class="l">roubos de rua registrados, jan./2003–out./2023</div></div>
+      <div class="stat" role="listitem"><div class="v">1.030,3</div><div class="l">taxa no pico (2017), por 100 mil hab.</div></div>
+      <div class="stat" role="listitem"><div class="v">+8,3%</div><div class="l">fevereiro acima da tendência (índice mediano)</div></div>
+      <div class="stat" role="listitem"><div class="v">−53%</div><div class="l">média diária em 2023 vs. 2018–2019</div></div>
+    </div>
+
+    <h3>3.1 RQ1 — Dois ciclos de alta e queda em vinte anos</h3>
+    <p>A Figura 1 mostra que a taxa de roubo de rua não seguiu uma trajetória linear, mas <b>dois ciclos completos</b>. No primeiro, a taxa mais que dobrou entre 2003 (394,2 por 100 mil hab.) e 2008 (858,5), uma alta de 117,8%, e então caiu 42,7% até 2012 (491,6). No segundo, voltou a subir 109,6% até o pico da série em 2017 (1.030,3) e recuou 45,5% até 2022 (561,4). A taxa anualizada de 2023, baseada em janeiro a outubro, é de aproximadamente 460,0, o que deixaria o ano próximo dos níveis de 2004–2005. Na comparação em base idêntica, os 25.948 registros de janeiro a outubro de 2023 são 18,8% inferiores aos 31.973 do mesmo período de 2022.</p>
+    <figure>
+      {{FIG:fig1_taxa_anual}}
+      <figcaption><b>Figura 1 — Taxa anual de roubo de rua por 100 mil habitantes, Município do Rio de Janeiro, 2003–2023.</b> Faixas cinzas: fases de queda. O ponto vazado de 2023 é uma estimativa anualizada (jan.–out.), com a população de 2022. Fonte: elaborado pelo autor com dados de IPP (2023) e ISP-RJ.</figcaption>
+    </figure>
+    <p>Dois cuidados qualificam essa leitura. Primeiro, a variação não é demográfica: a população projetada cresceu apenas 12,7% entre 2003 e 2022, e a correlação de Pearson entre população e taxa é fraca (r = 0,35). As oscilações refletem a dinâmica dos registros, não o tamanho da cidade. Segundo, o pico de 2017 provavelmente está <b>subestimado</b>. Entre janeiro e abril daquele ano, a paralisação da Polícia Civil do Estado do Rio de Janeiro reduziu o registro de ocorrências, e o próprio ISP alertou para a subnotificação nesse período, ressalvando que crimes como homicídios e roubos de veículos continuaram a ser registrados. Em fevereiro de 2017, a média diária caiu para 75,8 ocorrências, menos da metade das 202,2 de março, quando o atendimento começava a se normalizar (TRIBUNA PR, 2018). Ainda assim, 2017 terminou como o ano de maior taxa da série, e o maior valor mensal ocorreu em maio de 2017 (6.981 registros, ou 225,2 por dia), logo após a normalização do atendimento. A Tabela 1 apresenta a série anual completa como visão acessível dos dados.</p>
+
+    <figure>
+      <div class="table-wrap">
+        <table>
+          <caption class="tnote" style="caption-side: bottom; padding: 8px 12px;"><sup>a</sup> 2023: janeiro a outubro; população, diferença e taxa não publicadas na fonte.</caption>
+          <thead><tr><th scope="col">Ano</th><th scope="col">Ocorrências</th><th scope="col">Var. anual</th><th scope="col">População</th><th scope="col">Taxa /100 mil</th></tr></thead>
+          <tbody>
+{{TABELA_ANUAL}}
+          </tbody>
+        </table>
+      </div>
+      <figcaption><b>Tabela 1 — Série anual de roubos de rua, Município do Rio de Janeiro.</b> Valores oficiais conferidos pelo <i>pipeline</i>. Fonte: IPP (2023), a partir do ISP-RJ.</figcaption>
+    </figure>
+
+    <p>A Figura 2 mostra a série mensal, a tendência extraída pela STL e os 13 meses classificados como atípicos. Eles se concentram em dois episódios: janeiro e fevereiro de 2017 (z = −11,8 e −24,9, respectivamente), durante a paralisação policial, e março a setembro de 2020 (z entre −4,7 e −17,8), na fase mais restritiva da pandemia. Os demais atípicos (fev./2004, set./2012, dez./2012 e abr./2022) têm magnitude bem menor (|z| &lt; 4,6). A dispersão intra-anual confirma esse quadro: o CV mediano da média diária é de 8,1%, mas chega a 24,4% em 2017 e 31,4% em 2020. Em outras palavras, as duas maiores perturbações da série têm origem identificável e não são flutuações aleatórias.</p>
+    <figure>
+      {{FIG:fig2_serie_mensal}}
+      <figcaption><b>Figura 2 — Média diária de roubos de rua por mês (jan./2003–out./2023), tendência STL robusta e meses atípicos.</b> Losangos laranja: resíduos com |z robusto| &gt; 3,5. Faixas: paralisação da Polícia Civil (jan.–abr./2017) e período pandêmico considerado (mar./2020–dez./2021). Fonte: elaborado pelo autor.</figcaption>
+    </figure>
+
+    <h3>3.2 RQ2 — Um verão mais arriscado, um dezembro mais calmo</h3>
+    <p>O mapa de calor da Figura 3 dá uma primeira pista. As faixas horizontais dominam, ou seja, a tendência explica a maior parte da variação, mas há uma regularidade vertical sutil: fevereiro e março tendem a ser mais escuros do que dezembro do mesmo ano. A Figura 4 isola esse componente.</p>
+    <figure>
+      {{FIG:fig3_heatmap}}
+      <figcaption><b>Figura 3 — Média diária de roubos de rua por ano e mês.</b> Escala sequencial: tons mais escuros indicam mais ocorrências por dia. Células vazias: nov.–dez./2023, ainda não publicados. Fonte: elaborado pelo autor.</figcaption>
+    </figure>
+    <p>Depois de descontadas a tendência e a duração dos meses, <b>fevereiro</b> é o mês de maior incidência relativa (índice mediano de 1,083, ou 8,3% acima da tendência), seguido de março (1,051) e maio (1,045). <b>Dezembro</b> é o de menor incidência (0,941, ou 5,9% abaixo), seguido de janeiro (0,969). A diferença entre fevereiro e dezembro é de 14,2 pontos percentuais. O teste de Kruskal-Wallis rejeita a hipótese de distribuições iguais entre os meses (H = 64,3; p ≈ 1,5 × 10<sup>−9</sup>; n = 212), com efeito de magnitude relativamente forte (ε² = 0,27).</p>
+    <figure>
+      {{FIG:fig4_sazonalidade}}
+      <figcaption><b>Figura 4 — Índice sazonal mensal (média diária ÷ média móvel centrada 2×12), 2003–2023, sem os períodos atípicos.</b> Cada ponto é um ano; a linha tracejada (1,00) representa a tendência local. Fonte: elaborado pelo autor.</figcaption>
+    </figure>
+    <div class="callout"><b>Por que ajustar pelos dias do mês importa.</b> Na contagem bruta, fevereiro aparece <i>abaixo</i> da média (0,985 da média mensal), porque tem 28 ou 29 dias. Quando a comparação é feita por dia, ele se revela o mês mais crítico do ano (1,092 na média). Sem essa métrica derivada, a conclusão sobre a sazonalidade seria invertida.</div>
+    <p>O padrão é coerente com a teoria das atividades rotineiras (COHEN; FELSON, 1979), segundo a qual o crime predatório depende da convergência, no espaço e no tempo, de ofensores motivados, alvos disponíveis e ausência de guardiões. Fevereiro e março concentram o verão carioca, o Carnaval, o fluxo turístico e a retomada do calendário escolar e de trabalho, ou seja, mais pessoas circulando com bens portáteis em vias públicas e transportes cheios. A queda de dezembro é menos intuitiva, já que o mês tem comércio intenso. Uma hipótese é a combinação de policiamento reforçado nas festas de fim de ano com a saída de parte da população da cidade. Os dados agregados não permitem testar esses mecanismos, mas indicam onde a alocação sazonal de recursos teria mais retorno.</p>
+
+    <h3>3.3 RQ3 — A pandemia acelerou uma queda que já estava em curso</h3>
+    <p>A Figura 5 compara cada mês de 2020 a 2023 com o mesmo mês de 2019. O impacto inicial da pandemia foi severo: em abril e maio de 2020, a média diária de roubos de rua ficou 65,3% abaixo do mesmo período de 2019, com o mínimo em maio (−66,3%). O momento coincide com as medidas municipais de isolamento social adotadas a partir de março de 2020 (RIO DE JANEIRO, 2020) e confirma o padrão internacional de queda dos crimes de rua durante os <i>lockdowns</i> (NIVETTE <i>et al.</i>, 2021; STICKLE; FELSON, 2020).</p>
+    <figure>
+      {{FIG:fig5_pandemia}}
+      <figcaption><b>Figura 5 — Variação percentual da média diária de roubos de rua em relação ao mesmo mês de 2019, 2020–2023.</b> A linha de zero representa o nível de 2019. Fonte: elaborado pelo autor.</figcaption>
+    </figure>
+    <p>Dois achados, porém, matizam a leitura de um simples “efeito pandemia”. O primeiro é que <b>a queda começou antes</b>. Em janeiro e fevereiro de 2020, antes de qualquer restrição, a média diária já estava 16,6% abaixo do mesmo bimestre de 2019, e o segundo semestre de 2019 (junho a dezembro) já registrava queda de 13,1% em relação a 2018. A pandemia, portanto, acelerou uma inflexão já em curso, o que também aparece na tendência STL da Figura 2. O segundo é que <b>não houve retorno ao patamar anterior</b>. Mesmo após o relaxamento das restrições sanitárias, a média diária foi de 106,2 em 2021 e 104,2 em 2022, contra 182,8 em 2018–2019 (−43,0%), e caiu ainda mais em 2023 (85,4, ou −53,3%). A separação entre os dois períodos é total: todos os 24 meses de 2018–2019 superam todos os 22 meses de 2022–2023 (Mann-Whitney U = 528, o valor máximo possível; p ≈ 3,4 × 10<sup>−9</sup>).</p>
+    <p>A persistência da queda sugere mudanças estruturais, não apenas uma interrupção temporária. Entre as hipóteses plausíveis, que este estudo não testa, estão: (a) a mudança duradoura de rotinas, como o trabalho remoto ou híbrido e a menor circulação no Centro; (b) a redução do dinheiro em espécie com a difusão de pagamentos digitais após o lançamento do Pix, em novembro de 2020 (BANCO CENTRAL DO BRASIL, 2020); e (c) mudanças no comportamento de notificação, ou seja, vítimas que deixaram de registrar ocorrências. A hipótese (c) é especialmente importante, porque uma queda de registros não equivale necessariamente a uma queda de crimes. Distinguir essas explicações exigiria cruzar os registros com pesquisas de vitimização e com dados de mobilidade.</p>
+  </section>
+
+  <!-- ===================================================== 4. CONCLUSÃO -->
+  <section id="conclusao">
+    <h2>4. Conclusão</h2>
+    <p>Este trabalho analisou 250 meses de registros de roubo de rua no Município do Rio de Janeiro com um <i>pipeline</i> aberto e reprodutível. Quanto à <b>RQ1</b>, a série mostra dois ciclos completos de alta e queda, com pico em 2017 (1.030,3 por 100 mil hab., provavelmente subestimado pela paralisação policial) e queda de 45,5% até 2022. Os dados de 2023 apontam para a menor taxa desde 2004. Quanto à <b>RQ2</b>, há sazonalidade estatisticamente significativa e de efeito relativamente forte, com fevereiro como o mês mais crítico e dezembro como o mais calmo, padrão que só aparece quando as contagens são ajustadas pelo número de dias. Quanto à <b>RQ3</b>, a pandemia provocou uma queda de cerca de dois terços dos registros em abril–maio de 2020, mas se sobrepôs a um declínio iniciado em meados de 2019, e o patamar pós-pandêmico continua cerca de metade do anterior.</p>
+    <p><b>Limitações.</b> (i) Registros policiais medem notificação, não incidência real, e são sensíveis a greves, mudanças de procedimento e à disposição das vítimas em registrar. (ii) A categoria agregada mistura três tipos de roubo, cuja composição pode ter mudado ao longo do tempo (por exemplo, o peso crescente do roubo de celular). (iii) A granularidade municipal esconde a heterogeneidade entre bairros e regiões. (iv) A população é uma projeção do ISP, e a de 2023 foi imputada. (v) As análises são descritivas e não estabelecem relações causais.</p>
+    <p><b>Trabalhos futuros.</b> Propõe-se: desagregar a série por tipo de roubo e por Área Integrada de Segurança Pública, com os microdados do ISP; ajustar modelos de séries temporais interrompidas (ARIMA com intervenção) para estimar o contrafactual da pandemia; incorporar covariáveis de mobilidade urbana e de calendário (Carnaval, feriados, grandes eventos); e comparar os registros com pesquisas de vitimização para estimar a subnotificação.</p>
+  </section>
+
+  <!-- ===================================================== 5. FAIR -->
+  <section id="fair">
+    <h2>5. Disponibilidade dos dados e declaração FAIR</h2>
+    <p>Todos os artefatos deste estudo (código, dados brutos e tratados, metadados e o próprio artigo) estão disponíveis publicamente no repositório <a href="https://github.com/RAPHAELCCORTES/roubo-de-rua-rio">github.com/RAPHAELCCORTES/roubo-de-rua-rio</a>, organizado segundo os princípios FAIR (WILKINSON <i>et al.</i>, 2016).</p>
+    <div class="fair">
+      <div><b>Findable (Localizável)</b>README com resumo executivo e palavras-chave padronizadas; link perene para a fonte original (DATA.RIO); autoria, disciplina, semestre e instituição identificados no README e neste artigo; metadados <code>citation_*</code> no cabeçalho HTML.</div>
+      <div><b>Accessible (Acessível)</b>Repositório público; dados brutos versionados no próprio repositório (18 KB), sem autenticação ou credenciais; artigo publicado via GitHub Pages, com layout responsivo.</div>
+      <div><b>Interoperable (Interoperável)</b>Dados tratados em formatos abertos (Parquet e CSV.gz, UTF-8, datas ISO 8601); dicionário de dados em <code>data/data_dictionary.md</code> com tipo, formato e significado de cada variável.</div>
+      <div><b>Reusable (Reutilizável)</b>Código sob licença MIT; dados derivados e texto sob CC BY 4.0; dependências congeladas em <code>requirements.txt</code>; integridade do dado bruto verificada por SHA-256; relatório de validação gerado a cada execução.</div>
+    </div>
+    <p>Para reproduzir integralmente o <i>pipeline</i> (Python 3.12 ou superior):</p>
+<pre><code># 1. Clonar o repositório
+git clone https://github.com/RAPHAELCCORTES/roubo-de-rua-rio.git
+cd roubo-de-rua-rio
+
+# 2. Criar e ativar o ambiente virtual
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+
+# 3. Instalar as dependências congeladas
+pip install -r requirements.txt
+
+# 4. Executar o pipeline completo (ETL → análise → artigo)
+python -m src.etl                  # data/processed/*.parquet, *.csv.gz, validation_report.json
+python -m src.analysis             # data/processed/metrics.json, docs/assets/*
+python -m src.build_article        # docs/index.html</code></pre>
+    <p class="tnote">SHA-256 do arquivo bruto: <code>4df1da3485f3d4d3cd239ffba17672b788881f5e158033e9b48fec8eb04c3a50</code>. Página gerada em {{BUILD_DATE}}.</p>
+  </section>
+
+  <!-- ===================================================== 6. REFERÊNCIAS -->
+  <section id="referencias" class="refs">
+    <h2>6. Referências</h2>
+    <p>BANCO CENTRAL DO BRASIL. <b>Pix</b>. Brasília, DF: BCB, 2020. Disponível em: https://www.bcb.gov.br/estabilidadefinanceira/pix. Acesso em: 18 nov. 2026.</p>
+    <p>CLEVELAND, R. B.; CLEVELAND, W. S.; McRAE, J. E.; TERPENNING, I. STL: a seasonal-trend decomposition procedure based on loess. <b>Journal of Official Statistics</b>, v. 6, n. 1, p. 3-73, 1990.</p>
+    <p>COHEN, L. E.; FELSON, M. Social change and crime rate trends: a routine activity approach. <b>American Sociological Review</b>, v. 44, n. 4, p. 588-608, 1979. DOI: 10.2307/2094589.</p>
+    <p>HARRIS, C. R. <i>et al.</i> Array programming with NumPy. <b>Nature</b>, v. 585, p. 357-362, 2020. DOI: 10.1038/s41586-020-2649-2.</p>
+    <p>IGLEWICZ, B.; HOAGLIN, D. C. <b>How to detect and handle outliers</b>. Milwaukee: ASQC Quality Press, 1993. (The ASQC Basic References in Quality Control, v. 16).</p>
+    <p>INSTITUTO DE SEGURANÇA PÚBLICA DO ESTADO DO RIO DE JANEIRO (ISP-RJ). <b>ISPDados</b>: dados abertos de segurança pública. Rio de Janeiro: ISP, [2023]. Disponível em: http://www.ispdados.rj.gov.br/. Acesso em: 18 nov. 2026.</p>
+    <p>INSTITUTO PEREIRA PASSOS (IPP). <b>Tabela 2488</b>: incidências de roubo de rua, por mês, total, diferenças com relação ao ano anterior, população e taxa por cem mil habitantes segundo o ano, no Município do Rio de Janeiro entre janeiro/2003 – outubro/2023. Rio de Janeiro: DATA.RIO, 2023. Disponível em: https://www.data.rio/documents/5e15538d3a1b47e7a356463a324b21b7/about. Acesso em: 18 nov. 2026.</p>
+    <p>KRUSKAL, W. H.; WALLIS, W. A. Use of ranks in one-criterion variance analysis. <b>Journal of the American Statistical Association</b>, v. 47, n. 260, p. 583-621, 1952. DOI: 10.1080/01621459.1952.10483441.</p>
+    <p>LEYS, C.; LEY, C.; KLEIN, O.; BERNARD, P.; LICATA, L. Detecting outliers: do not use standard deviation around the mean, use absolute deviation around the median. <b>Journal of Experimental Social Psychology</b>, v. 49, n. 4, p. 764-766, 2013. DOI: 10.1016/j.jesp.2013.03.013.</p>
+    <p>McKINNEY, W. Data structures for statistical computing in Python. <i>In</i>: PYTHON IN SCIENCE CONFERENCE, 9., 2010, Austin. <b>Proceedings</b> [...]. Austin: SciPy, 2010. p. 56-61. DOI: 10.25080/Majora-92bf1922-00a.</p>
+    <p>NIVETTE, A. E. <i>et al.</i> A global analysis of the impact of COVID-19 stay-at-home restrictions on crime. <b>Nature Human Behaviour</b>, v. 5, p. 868-877, 2021. DOI: 10.1038/s41562-021-01139-z.</p>
+    <p>NÚMERO de mortes pela polícia do Rio aumenta 17,6% em fevereiro. <b>Tribuna PR</b>, Curitiba, 2 abr. 2018. Disponível em: https://www.tribunapr.com.br/noticias/brasil/numero-de-mortes-pela-policia-do-rio-aumenta-176-em-fevereiro/. Acesso em: 18 nov. 2026.</p>
+    <p>PLOTLY TECHNOLOGIES INC. <b>Collaborative data science</b>. Montréal: Plotly Technologies Inc., 2015. Disponível em: https://plot.ly. Acesso em: 18 nov. 2026.</p>
+    <p>RIO DE JANEIRO (Município). Decreto Rio nº 47.282, de 21 de março de 2020. Determina a adoção de medidas adicionais, pelo Município, para enfrentamento da pandemia do novo Coronavírus – COVID-19, e dá outras providências. <b>Diário Oficial do Município do Rio de Janeiro</b>, Rio de Janeiro, 2020.</p>
+    <p>SEABOLD, S.; PERKTOLD, J. Statsmodels: econometric and statistical modeling with Python. <i>In</i>: PYTHON IN SCIENCE CONFERENCE, 9., 2010, Austin. <b>Proceedings</b> [...]. Austin: SciPy, 2010. p. 92-96. DOI: 10.25080/Majora-92bf1922-011.</p>
+    <p>STICKLE, B.; FELSON, M. Crime rates in a pandemic: the largest criminological experiment in history. <b>American Journal of Criminal Justice</b>, v. 45, p. 525-536, 2020. DOI: 10.1007/s12103-020-09546-0.</p>
+    <p>TOMCZAK, M.; TOMCZAK, E. The need to report effect size estimates revisited: an overview of some recommended measures of effect size. <b>Trends in Sport Sciences</b>, v. 1, n. 21, p. 19-25, 2014.</p>
+    <p>VIRTANEN, P. <i>et al.</i> SciPy 1.0: fundamental algorithms for scientific computing in Python. <b>Nature Methods</b>, v. 17, p. 261-272, 2020. DOI: 10.1038/s41592-019-0686-2.</p>
+    <p>WILKINSON, M. D. <i>et al.</i> The FAIR Guiding Principles for scientific data management and stewardship. <b>Scientific Data</b>, v. 3, 160018, 2016. DOI: 10.1038/sdata.2016.18.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    Raphael Cortes · UNILASALLE-RJ · Sistemas de Informação · 2026.2 · Prof. Alexandre Neves Louzada<br>
+    Texto e dados derivados sob <a href="https://creativecommons.org/licenses/by/4.0/deed.pt_BR">CC BY 4.0</a> · Código sob licença MIT ·
+    <a href="https://github.com/RAPHAELCCORTES/roubo-de-rua-rio">Código-fonte</a>
+  </div>
+</footer>
+<script>
+  // Ajusta os gráficos ao tamanho real do contêiner (responsivo) e compacta em telas estreitas
+  (function () {
+    function fit() {
+      var narrow = window.innerWidth < 640;
+      document.querySelectorAll('.plotly-graph-div').forEach(function (d) {
+        if (!window.Plotly || !d.layout) return;
+        var upd = {'margin.l': narrow ? 58 : 60, 'margin.r': narrow ? 10 : 24,
+                   'font.size': narrow ? 11 : 13};
+        (d.layout.annotations || []).forEach(function (a, i) {
+          if (a._full === undefined) a._full = a.text;
+          var short = a._full.replace(/^(Alta|Queda) \d{4}–\d{4}$/, '$1')
+                             .replace('Paralisação da PCERJ', 'Greve PCERJ')
+                             .replace('Pandemia de COVID-19', 'Pandemia');
+          upd['annotations[' + i + '].text'] = narrow ? short : a._full;
+        });
+        Plotly.relayout(d, upd).then(function () { Plotly.Plots.resize(d); });
+      });
+    }
+    window.addEventListener('load', fit);
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 150); });
+  })();
+</script>
+</body>
+</html>

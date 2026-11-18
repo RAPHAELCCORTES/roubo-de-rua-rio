@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Se usar este trabalho, cite-o conforme abaixo."
+title: "Roubo de rua no Município do Rio de Janeiro (2003–2023): tendência, sazonalidade e ruptura pandêmica nos registros policiais"
+authors:
+  - family-names: "Cortes"
+    given-names: "Raphael"
+    affiliation: "Centro Universitário La Salle do Rio de Janeiro (UNILASALLE-RJ)"
+date-released: 2026-11-19
+license: MIT
+repository-code: "https://github.com/RAPHAELCCORTES/roubo-de-rua-rio"
+url: "https://raphaelccortes.github.io/roubo-de-rua-rio/"
+keywords:
+  - segurança pública
+  - roubo de rua
+  - séries temporais
+  - sazonalidade
+  - COVID-19
+  - Rio de Janeiro
+  - dados abertos
+  - FAIR
